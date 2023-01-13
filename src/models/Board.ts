@@ -6,6 +6,7 @@ import {Queen} from "./figures/Queen";
 import {King} from "./figures/King";
 import {Rook} from "./figures/Rook";
 import {Pawn} from "./figures/Pawn";
+import {FigureNames} from "./figures/Figure";
 
 export class Board {
     cells: Cell[][] = [];
@@ -22,6 +23,25 @@ export class Board {
             }
             this.cells.push(row);
         }
+    }
+
+    public isCellUnderAttack(target: Cell, color: Colors | undefined): boolean {
+        let targetUnderAttack: boolean = false;
+
+        this.cells.forEach((element) => {
+            element.forEach((cell) => {
+                if (cell.figure?.color !== color) {
+                    if (cell.figure?.name === FigureNames.PAWN && cell.isPawnAttack(target)) {
+                        targetUnderAttack = true;
+                    }
+
+                    if (cell.figure?.canMove(target) && cell.figure?.name !== FigureNames.PAWN) {
+                        targetUnderAttack = true;
+                    }
+                }
+            });
+        });
+        return !targetUnderAttack;
     }
 
     public getCopyBoard(): Board {

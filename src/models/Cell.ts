@@ -64,7 +64,7 @@ export class Cell {
         return true;
     }
 
-    isEnemy(target: Cell) : boolean {
+    isEnemy(target: Cell): boolean {
         if (target.figure) {
             return this.figure?.color !== target.figure.color;
         }
@@ -74,6 +74,12 @@ export class Cell {
     setFigure(figure: Figure) {
         this.figure = figure;
         this.figure.cell = this;
+    }
+
+    isPawnAttack(target: Cell): boolean {
+        const direction = this.figure?.color === Colors.BLACK ? 1 : -1;
+        return target.y === this.y + direction &&
+            (target.x === this.x + 1 || target.x === this.x - 1);
     }
 
     moveFigure(target: Cell) {
