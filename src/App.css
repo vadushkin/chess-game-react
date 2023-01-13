@@ -39,3 +39,7 @@
 .white {
     background-color: burlywood;
 }
+
+.selected {
+    background-color: firebrick;
+}
