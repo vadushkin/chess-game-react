@@ -5,7 +5,6 @@ import {Cell} from "../models/Cell";
 import {Player} from "../models/Player";
 import {FigureNames} from "../models/figures/Figure";
 import {Modal, Button} from "react-bootstrap";
-import PreviousStep from "./PreviousStep";
 
 interface BoardProps {
     board: Board;
@@ -13,7 +12,7 @@ interface BoardProps {
     currentPlayer: Player | null;
     swapPlayer: () => void;
     handleRestart: () => void;
-    history: Cell[];
+    history: { x: number; y: number; figure: string }[];
     setHistory: React.ComponentState;
 }
 
@@ -30,7 +29,7 @@ const BoardComponent: FC<BoardProps> = ({board, setBoard, currentPlayer, swapPla
             swapPlayer();
             board.isCheckmate(currentPlayer?.color);
             setSelectedCell(null);
-            setHistory([...history, cell])
+            setHistory([...history, {x: cell.x, y: cell.y, figure: cell.figure?.name}])
         } else {
             if (cell.figure?.color === currentPlayer?.color) {
                 setSelectedCell(cell);
@@ -154,11 +153,6 @@ const BoardComponent: FC<BoardProps> = ({board, setBoard, currentPlayer, swapPla
                                 selected={cell.x === selectedCell?.x && cell.y === selectedCell?.y}
                             />
                         )}
-                    </React.Fragment>
-                )}
-                {history.map((cell, index) =>
-                    <React.Fragment key={index}>
-                        <PreviousStep cell={cell}/>
                     </React.Fragment>
                 )}
             </div>

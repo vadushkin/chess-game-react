@@ -6,14 +6,14 @@ import {Player} from "./models/Player";
 import {Colors} from "./models/Colors";
 import LostFigures from "./components/LostFigures";
 import Timer from "./components/Timer";
-import {Cell} from "./models/Cell";
+import PreviousSteps from "./components/PreviousSteps";
 
 const App = () => {
     const [board, setBoard] = useState(new Board());
     const [whitePlayer, setWhitePlayer] = useState(new Player(Colors.WHITE));
     const [blackPlayer, setBlackPlayer] = useState(new Player(Colors.BLACK));
     const [currentPlayer, setCurrentPlayer] = useState<Player | null>(null);
-    const [history, setHistory] = useState<Cell[] | []>([]);
+    const [history, setHistory] = useState<{x: number, y: number, figure: string}[]>([]);
     const [blackTime, setBlackTime] = useState(300);
     const [whiteTime, setWhiteTime] = useState(300);
 
@@ -72,6 +72,7 @@ const App = () => {
                 <LostFigures title="Black figures" figures={board.lostBlackFigures}/>
                 <LostFigures title="White figures" figures={board.lostWhiteFigures}/>
             </div>
+            <PreviousSteps title="Previous steps" history={history}/>
         </div>
     );
 };

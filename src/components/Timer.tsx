@@ -46,8 +46,8 @@ const Timer: FC<TimeProps> = ({
                     <div>
                         <Button variant="primary" onClick={handleRestart}>Restart game</Button>
                     </div>
-                    <h2> Black`s time: {blackTime}</h2>
-                    <h2> White`s time: {whiteTime}</h2>
+                    <h2> Black time: {blackTime}</h2>
+                    <h2> White time: {whiteTime}</h2>
                 </div>
             ) : (
                 <Modal
