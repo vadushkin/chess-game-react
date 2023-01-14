@@ -1,21 +1,29 @@
 import React, {useEffect, useState} from 'react';
-import "./App.sass"
-import BoardComponent from "./components/BoardComponent";
+import {useMediaQuery} from "react-responsive";
+
 import {Board} from "./models/Board";
 import {Player} from "./models/Player";
 import {Colors} from "./models/Colors";
-import LostFigures from "./components/LostFigures";
-import Timer from "./components/Timer";
-import PreviousSteps from "./components/PreviousSteps";
+
+import Mobile from "./displays/Mobile";
+import Desktop from "./displays/Desktop";
+
+import "./App.sass"
 
 const App = () => {
     const [board, setBoard] = useState(new Board());
     const [whitePlayer, setWhitePlayer] = useState(new Player(Colors.WHITE));
     const [blackPlayer, setBlackPlayer] = useState(new Player(Colors.BLACK));
     const [currentPlayer, setCurrentPlayer] = useState<Player | null>(null);
-    const [history, setHistory] = useState<{x: number, y: number, figure: string}[]>([]);
+    const [history, setHistory] = useState<{ x: number, y: number, figure: string }[]>([]);
     const [blackTime, setBlackTime] = useState(300);
     const [whiteTime, setWhiteTime] = useState(300);
+
+    const isDesktopOrLaptop = useMediaQuery({
+        query: "(min-width: 1224px)",
+    });
+
+    const isTabletOrMobile = useMediaQuery({query: "(max-width: 1224px)"});
 
     useEffect(() => {
         restart();
@@ -50,29 +58,37 @@ const App = () => {
     }
 
     return (
-        <div className="screen">
-            <Timer
-                currentPlayer={currentPlayer}
-                whiteTime={whiteTime}
-                blackTime={blackTime}
-                decrementWhiteTimer={decrementWhiteTimer}
-                decrementBlackTimer={decrementBlackTimer}
-                handleRestart={handleRestart}
-            />
-            <BoardComponent
-                handleRestart={handleRestart}
-                board={board}
-                setBoard={setBoard}
-                currentPlayer={currentPlayer}
-                swapPlayer={swapPlayer}
-                history={history}
-                setHistory={setHistory}
-            />
-            <div>
-                <LostFigures title="Black figures" figures={board.lostBlackFigures}/>
-                <LostFigures title="White figures" figures={board.lostWhiteFigures}/>
-            </div>
-            <PreviousSteps title="Previous steps" history={history}/>
+        <div className="app">
+            {isDesktopOrLaptop && (
+                <Desktop
+                    board={board}
+                    setBoard={setBoard}
+                    currentPlayer={currentPlayer}
+                    whiteTime={whiteTime}
+                    blackTime={blackTime}
+                    decrementWhiteTimer={decrementWhiteTimer}
+                    decrementBlackTimer={decrementBlackTimer}
+                    handleRestart={handleRestart}
+                    setHistory={setHistory}
+                    history={history}
+                    swapPlayer={swapPlayer}
+                />
+            )}
+            {isTabletOrMobile && (
+                <Mobile
+                    board={board}
+                    setBoard={setBoard}
+                    currentPlayer={currentPlayer}
+                    whiteTime={whiteTime}
+                    blackTime={blackTime}
+                    decrementWhiteTimer={decrementWhiteTimer}
+                    decrementBlackTimer={decrementBlackTimer}
+                    handleRestart={handleRestart}
+                    setHistory={setHistory}
+                    history={history}
+                    swapPlayer={swapPlayer}
+                />
+            )}
         </div>
     );
 };
