@@ -9,7 +9,7 @@ const PreviousSteps: FC<History> = ({title, history}) => {
     return (
         <div className="previousSteps">
             <h3>{title}</h3>
-            {history.map((cell, index) => (
+            {history.slice(-25).map((cell, index) => (
                 <div key={index}>
                     {cell.figure}
                     {cell.cell}

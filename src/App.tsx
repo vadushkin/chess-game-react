@@ -16,8 +16,8 @@ const App = () => {
     const [blackPlayer, setBlackPlayer] = useState(new Player(Colors.BLACK));
     const [currentPlayer, setCurrentPlayer] = useState<Player | null>(null);
     const [history, setHistory] = useState<{ figure: string, cell: string }[]>([]);
-    const [blackTime, setBlackTime] = useState(300);
-    const [whiteTime, setWhiteTime] = useState(300);
+    const [blackTime, setBlackTime] = useState(600);
+    const [whiteTime, setWhiteTime] = useState(600);
 
     const isDesktopOrLaptop = useMediaQuery({
         query: "(min-width: 1224px)",
@@ -43,8 +43,8 @@ const App = () => {
     }
 
     const handleRestart = () => {
-        setWhiteTime(300);
-        setBlackTime(300);
+        setWhiteTime(600);
+        setBlackTime(600);
         restart();
     }
 
