@@ -15,7 +15,7 @@ interface DesktopProps {
     handleRestart: () => void;
     board: Board;
     setBoard: (board: Board) => void;
-    history: { x: number; y: number; figure: string }[];
+    history: { figure: string, cell: string }[];
     setHistory: React.ComponentState;
     swapPlayer: () => void;
 }

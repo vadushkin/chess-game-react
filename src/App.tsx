@@ -15,7 +15,7 @@ const App = () => {
     const [whitePlayer, setWhitePlayer] = useState(new Player(Colors.WHITE));
     const [blackPlayer, setBlackPlayer] = useState(new Player(Colors.BLACK));
     const [currentPlayer, setCurrentPlayer] = useState<Player | null>(null);
-    const [history, setHistory] = useState<{ x: number, y: number, figure: string }[]>([]);
+    const [history, setHistory] = useState<{ figure: string, cell: string }[]>([]);
     const [blackTime, setBlackTime] = useState(300);
     const [whiteTime, setWhiteTime] = useState(300);
 

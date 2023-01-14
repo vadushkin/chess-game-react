@@ -2,7 +2,7 @@ import React, {FC} from 'react';
 
 interface History {
     title: string;
-    history: { x: number; y: number; figure: string }[];
+    history: { figure: string, cell: string }[];
 }
 
 const PreviousSteps: FC<History> = ({title, history}) => {
@@ -11,11 +11,10 @@ const PreviousSteps: FC<History> = ({title, history}) => {
             <h3>{title}</h3>
             {history.map((cell, index) => (
                 <div key={index}>
-                    {cell.x}
-                    {cell.y}
                     {cell.figure}
+                    {cell.cell}
                 </div>
-                ))}
+            ))}
         </div>
     );
 };

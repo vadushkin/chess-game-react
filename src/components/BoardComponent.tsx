@@ -5,6 +5,7 @@ import {Cell} from "../models/Cell";
 import {Player} from "../models/Player";
 import {FigureNames} from "../models/figures/Figure";
 import {Modal, Button} from "react-bootstrap";
+import getChessNotationFromXAndY from "../utils/chessNotation";
 
 interface BoardProps {
     board: Board;
@@ -12,11 +13,19 @@ interface BoardProps {
     currentPlayer: Player | null;
     swapPlayer: () => void;
     handleRestart: () => void;
-    history: { x: number; y: number; figure: string }[];
+    history: { figure: string, cell: string }[];
     setHistory: React.ComponentState;
 }
 
-const BoardComponent: FC<BoardProps> = ({board, setBoard, currentPlayer, swapPlayer, handleRestart, history, setHistory}) => {
+const BoardComponent: FC<BoardProps> = ({
+                                            board,
+                                            setBoard,
+                                            currentPlayer,
+                                            swapPlayer,
+                                            handleRestart,
+                                            history,
+                                            setHistory
+                                        }) => {
     const [selectedCell, setSelectedCell] = useState<Cell | null>(null);
 
     const [show, setShow] = useState(true);
@@ -29,7 +38,7 @@ const BoardComponent: FC<BoardProps> = ({board, setBoard, currentPlayer, swapPla
             swapPlayer();
             board.isCheckmate(currentPlayer?.color);
             setSelectedCell(null);
-            setHistory([...history, {x: cell.x, y: cell.y, figure: cell.figure?.name}])
+            setHistory([...history, {figure: cell.figure?.name, cell: getChessNotationFromXAndY(cell.x, cell.y)}])
         } else {
             if (cell.figure?.color === currentPlayer?.color) {
                 setSelectedCell(cell);
