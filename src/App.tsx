@@ -27,6 +27,7 @@ const App = () => {
         newBoard.initCells();
         newBoard.addFigures();
         setBoard(newBoard);
+
         setCurrentPlayer(whitePlayer);
     }
 
@@ -37,6 +38,7 @@ const App = () => {
                 currentPlayer={currentPlayer}
             />
             <BoardComponent
+                restart={restart}
                 board={board}
                 setBoard={setBoard}
                 currentPlayer={currentPlayer}
