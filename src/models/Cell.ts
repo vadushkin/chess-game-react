@@ -89,56 +89,74 @@ export class Cell {
     }
 
     moveFigure(target: Cell) {
-        if (this?.figure?.name === FigureNames.KING &&
-            this?.figure?.color === Colors.BLACK &&
-            target === this.board.cells[0][2]) {
-            this.board.cells[this.y][this.x].figure = null;
-            this.board.cells[0][4].figure = null;
-            this.board.cells[0][0].figure = null;
+        if (!this.board.isWhiteCastling || !this.board.isBlackCastling) {
+            if (!this.board.isBlackCastling) {
+                if (this?.figure?.name === FigureNames.KING &&
+                    this?.figure?.color === Colors.BLACK &&
+                    target === this.board.cells[0][2])
+                {
+                    this.board.cells[this.y][this.x].figure = null;
+                    this.board.cells[0][4].figure = null;
+                    this.board.cells[0][0].figure = null;
 
-            new King(Colors.BLACK, this.board.cells[0][2]);
-            new Rook(Colors.BLACK, this.board.cells[0][3]);
-        }
-        if (this?.figure?.name === FigureNames.KING &&
-            this?.figure?.color === Colors.BLACK &&
-            target === this.board.cells[0][6]) {
-            this.board.cells[this.y][this.x].figure = null;
-            this.board.cells[0][4].figure = null;
-            this.board.cells[0][7].figure = null;
+                    new King(Colors.BLACK, this.board.cells[0][2]);
+                    new Rook(Colors.BLACK, this.board.cells[0][3]);
+                }
+                if (this?.figure?.name === FigureNames.KING &&
+                    this?.figure?.color === Colors.BLACK &&
+                    target === this.board.cells[0][6])
+                {
+                    this.board.cells[this.y][this.x].figure = null;
+                    this.board.cells[0][4].figure = null;
+                    this.board.cells[0][7].figure = null;
 
-            new King(Colors.BLACK, this.board.cells[0][6]);
-            new Rook(Colors.BLACK, this.board.cells[0][5]);
-        }
-        if (this?.figure?.name === FigureNames.KING &&
-            this?.figure?.color === Colors.WHITE &&
-            target === this.board.cells[7][6]) {
-            this.board.cells[this.y][this.x].figure = null;
-            this.board.cells[7][4].figure = null;
-            this.board.cells[7][7].figure = null;
-
-            new King(Colors.WHITE, this.board.cells[7][6]);
-            new Rook(Colors.WHITE, this.board.cells[7][5]);
-        }
-        if (
-            this?.figure?.name === FigureNames.KING &&
-            this?.figure?.color === Colors.WHITE &&
-            target === this.board.cells[7][2]) {
-            this.board.cells[this.y][this.x].figure = null;
-            this.board.cells[7][4].figure = null;
-            this.board.cells[7][0].figure = null;
-
-            new King(Colors.WHITE, this.board.cells[7][2]);
-            new Rook(Colors.WHITE, this.board.cells[7][3]);
-
-        } else {
-            if (this.figure && this.figure?.canMove(target)) {
-                this.figure.moveFigure(target);
-
-                if (target.figure) this.addLostFigure(target.figure);
-
-                target.setFigure(this.figure);
-                this.figure = null;
+                    new King(Colors.BLACK, this.board.cells[0][6]);
+                    new Rook(Colors.BLACK, this.board.cells[0][5]);
+                }
             }
+
+            if (!this.board.isWhiteCastling) {
+                if (this?.figure?.name === FigureNames.KING &&
+                    this?.figure?.color === Colors.WHITE &&
+                    target === this.board.cells[7][6])
+                {
+                    this.board.cells[this.y][this.x].figure = null;
+                    this.board.cells[7][4].figure = null;
+                    this.board.cells[7][7].figure = null;
+                    new King(Colors.WHITE, this.board.cells[7][6]);
+                    new Rook(Colors.WHITE, this.board.cells[7][5]);
+                }
+                if (
+                    this?.figure?.name === FigureNames.KING &&
+                    this?.figure?.color === Colors.WHITE &&
+                    target === this.board.cells[7][2])
+                {
+                    this.board.cells[this.y][this.x].figure = null;
+                    this.board.cells[7][4].figure = null;
+                    this.board.cells[7][0].figure = null;
+
+                    new King(Colors.WHITE, this.board.cells[7][2]);
+                    new Rook(Colors.WHITE, this.board.cells[7][3]);
+                }
+            }
+        }
+        if (this.figure && this.figure?.canMove(target)) {
+            this.figure.moveFigure(target);
+
+            if (this?.figure?.name === FigureNames.KING &&
+                this?.figure?.color === Colors.WHITE) {
+                this.board.isWhiteCastling = true;
+            }
+
+            if (this?.figure?.name === FigureNames.KING &&
+                this?.figure?.color === Colors.BLACK) {
+                this.board.isBlackCastling = true;
+            }
+
+            if (target.figure) this.addLostFigure(target.figure);
+
+            target.setFigure(this.figure);
+            this.figure = null;
         }
     }
 }

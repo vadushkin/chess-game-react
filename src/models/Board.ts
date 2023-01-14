@@ -19,6 +19,8 @@ export class Board {
     checkmate: boolean = false;
     stalemate: boolean = false;
     promotePawnCell: Cell | null = null;
+    isWhiteCastling: boolean = false;
+    isBlackCastling: boolean = false;
 
     public initCells() {
         for (let i = 0; i < 8; i++) {
@@ -44,6 +46,8 @@ export class Board {
         newBoard.checkmate = this.checkmate;
         newBoard.stalemate = this.stalemate;
         newBoard.promotePawnCell = this.promotePawnCell;
+        newBoard.isBlackCastling = this.isBlackCastling;
+        newBoard.isWhiteCastling = this.isWhiteCastling;
         return newBoard;
     }
 
