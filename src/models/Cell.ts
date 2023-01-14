@@ -1,6 +1,8 @@
-import {Colors} from "./Colors";
-import {Figure} from "./figures/Figure";
 import {Board} from "./Board";
+import {Colors} from "./Colors";
+import {Figure, FigureNames} from "./figures/Figure";
+import {King} from "./figures/King";
+import {Rook} from "./figures/Rook";
 
 export class Cell {
     readonly x: number;
@@ -15,14 +17,19 @@ export class Cell {
         this.x = x;
         this.y = y;
         this.color = color;
-        this.board = board;
         this.figure = figure;
+        this.board = board;
         this.available = false;
         this.id = Math.random();
     }
 
     isEmpty(): boolean {
         return this.figure === null;
+    }
+
+    isEnemy(target: Cell): boolean {
+        if (target.figure) return this.figure?.color !== target.figure.color;
+        return false;
     }
 
     isEmptyVertical(target: Cell): boolean {
@@ -64,11 +71,10 @@ export class Cell {
         return true;
     }
 
-    isEnemy(target: Cell): boolean {
-        if (target.figure) {
-            return this.figure?.color !== target.figure.color;
-        }
-        return false;
+    isPawnAttack(target: Cell): boolean {
+        const direction = this.figure?.color === Colors.BLACK ? 1 : -1;
+        return target.y === this.y + direction &&
+            (target.x === this.x + 1 || target.x === this.x - 1);
     }
 
     setFigure(figure: Figure) {
@@ -76,20 +82,63 @@ export class Cell {
         this.figure.cell = this;
     }
 
-    isPawnAttack(target: Cell): boolean {
-        const direction = this.figure?.color === Colors.BLACK ? 1 : -1;
-        return target.y === this.y + direction &&
-            (target.x === this.x + 1 || target.x === this.x - 1);
+    addLostFigure(figure: Figure) {
+        figure.color === Colors.BLACK
+            ? this.board.lostBlackFigures.push(figure)
+            : this.board.lostWhiteFigures.push(figure);
     }
 
     moveFigure(target: Cell) {
-        if (this.figure && this.figure?.canMove(target)) {
-            this.figure.moveFigure(target);
-            if (target.figure) {
-                this.board.addLostFigure(target.figure)
+        if (this?.figure?.name === FigureNames.KING &&
+            this?.figure?.color === Colors.BLACK &&
+            target === this.board.cells[0][2]) {
+            this.board.cells[this.y][this.x].figure = null;
+            this.board.cells[0][4].figure = null;
+            this.board.cells[0][0].figure = null;
+
+            new King(Colors.BLACK, this.board.cells[0][2]);
+            new Rook(Colors.BLACK, this.board.cells[0][3]);
+        }
+        if (this?.figure?.name === FigureNames.KING &&
+            this?.figure?.color === Colors.BLACK &&
+            target === this.board.cells[0][6]) {
+            this.board.cells[this.y][this.x].figure = null;
+            this.board.cells[0][4].figure = null;
+            this.board.cells[0][7].figure = null;
+
+            new King(Colors.BLACK, this.board.cells[0][6]);
+            new Rook(Colors.BLACK, this.board.cells[0][5]);
+        }
+        if (this?.figure?.name === FigureNames.KING &&
+            this?.figure?.color === Colors.WHITE &&
+            target === this.board.cells[7][6]) {
+            this.board.cells[this.y][this.x].figure = null;
+            this.board.cells[7][4].figure = null;
+            this.board.cells[7][7].figure = null;
+
+            new King(Colors.WHITE, this.board.cells[7][6]);
+            new Rook(Colors.WHITE, this.board.cells[7][5]);
+        }
+        if (
+            this?.figure?.name === FigureNames.KING &&
+            this?.figure?.color === Colors.WHITE &&
+            target === this.board.cells[7][2]) {
+            this.board.cells[this.y][this.x].figure = null;
+            this.board.cells[7][4].figure = null;
+            this.board.cells[7][0].figure = null;
+
+            new King(Colors.WHITE, this.board.cells[7][2]);
+            new Rook(Colors.WHITE, this.board.cells[7][3]);
+
+        } else {
+            if (this.figure && this.figure?.canMove(target)) {
+                this.figure.moveFigure(target);
+
+                if (target.figure) this.addLostFigure(target.figure);
+
+                target.setFigure(this.figure);
+                this.figure = null;
             }
-            target.setFigure(this.figure);
-            this.figure = null;
         }
     }
 }

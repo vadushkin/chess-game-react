@@ -2,6 +2,9 @@ import React, {FC, useEffect, useRef, useState} from 'react';
 import {Player} from "../models/Player";
 import {Colors} from "../models/Colors";
 
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+
 interface TimeProps {
     currentPlayer: Player | null;
     restart: () => void;
@@ -12,6 +15,8 @@ const Timer: FC<TimeProps> = ({currentPlayer, restart}) => {
     const [blackTime, setBlackTime] = useState(300);
     const [whiteTime, setWhiteTime] = useState(300);
     const timer = useRef<null | ReturnType<typeof setInterval>>(null);
+    const [show, setShow] = useState(true);
+    const handleClose = () => setShow(false);
 
     useEffect(() => {
         startTimer();
@@ -26,11 +31,11 @@ const Timer: FC<TimeProps> = ({currentPlayer, restart}) => {
     }
 
     function decrementBlackTimer() {
-        setBlackTime(prev => prev - 1)
+        setBlackTime((prev) => (prev > 0 ? prev - 1 : prev));
     }
 
     function decrementWhiteTimer() {
-        setWhiteTime(prev => prev - 1)
+        setWhiteTime((prev) => (prev > 0 ? prev - 1 : prev));
     }
 
     const handleRestart = () => {
@@ -41,13 +46,38 @@ const Timer: FC<TimeProps> = ({currentPlayer, restart}) => {
 
     return (
         <div>
-            <div>
-                <button onClick={handleRestart}>Restart Game</button>
-            </div>
-            <h2>Black Time: {blackTime}</h2>
-            <h2>White Time: {whiteTime}</h2>
+            {whiteTime && blackTime ? (
+                <div className="timerBlock">
+                    <div>
+                        <Button variant="primary" onClick={handleRestart}>Restart game</Button>
+                    </div>
+                    <h2> Black`s time: {blackTime}</h2>
+                    <h2> White`s time: {whiteTime}</h2>
+                </div>
+            ) : (
+                <Modal
+                    show={show}
+                    onHide={handleClose}
+                    backdrop="static"
+                    keyboard={false}
+                >
+                    <Modal.Header>
+                        <Modal.Title>Game Over</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        {whiteTime ? "White" : "Black"} won.
+                        Maybe again?
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="primary" onClick={handleRestart}>
+                            New game
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            )}
         </div>
     );
 };
 
 export default Timer;
+

@@ -15,13 +15,18 @@ const BoardComponent: FC<BoardProps> = ({board, setBoard, currentPlayer, swapPla
     const [selectedCell, setSelectedCell] = useState<Cell | null>(null);
 
     function click(cell: Cell) {
-        if (selectedCell && selectedCell !== cell && selectedCell.figure?.canMove(cell)) {
-            selectedCell.moveFigure(cell);
+        if (selectedCell && selectedCell !== cell && cell.available) {
+            selectedCell?.moveFigure(cell);
+            board.pawnReady();
             swapPlayer();
+            board.isCheckmate(currentPlayer?.color);
             setSelectedCell(null);
         } else {
             if (cell.figure?.color === currentPlayer?.color) {
                 setSelectedCell(cell);
+            }
+            if (!cell.figure) {
+                setSelectedCell(null);
             }
         }
     }
@@ -31,7 +36,7 @@ const BoardComponent: FC<BoardProps> = ({board, setBoard, currentPlayer, swapPla
     }, [selectedCell])
 
     function highlightCells() {
-        board.highlightCells(selectedCell);
+        board.highlightCells(selectedCell, currentPlayer?.color);
         updateBoard();
     }
 

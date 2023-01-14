@@ -19,7 +19,7 @@ const App = () => {
     }, [])
 
     function swapPlayer() {
-        setCurrentPlayer(currentPlayer?.color === Colors.WHITE ? blackPlayer : whitePlayer)
+        setCurrentPlayer(currentPlayer?.color === Colors.BLACK ? whitePlayer : blackPlayer)
     }
 
     function restart() {
@@ -27,6 +27,7 @@ const App = () => {
         newBoard.initCells();
         newBoard.addFigures();
         setBoard(newBoard);
+        setCurrentPlayer(whitePlayer);
     }
 
     return (
