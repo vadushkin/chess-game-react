@@ -6,12 +6,14 @@ import {Player} from "./models/Player";
 import {Colors} from "./models/Colors";
 import LostFigures from "./components/LostFigures";
 import Timer from "./components/Timer";
+import {Cell} from "./models/Cell";
 
 const App = () => {
     const [board, setBoard] = useState(new Board());
     const [whitePlayer, setWhitePlayer] = useState(new Player(Colors.WHITE));
     const [blackPlayer, setBlackPlayer] = useState(new Player(Colors.BLACK));
     const [currentPlayer, setCurrentPlayer] = useState<Player | null>(null);
+    const [history, setHistory] = useState<Cell[] | []>([]);
 
     useEffect(() => {
         restart();
@@ -27,7 +29,7 @@ const App = () => {
         newBoard.initCells();
         newBoard.addFigures();
         setBoard(newBoard);
-
+        setHistory([]);
         setCurrentPlayer(whitePlayer);
     }
 
@@ -43,6 +45,8 @@ const App = () => {
                 setBoard={setBoard}
                 currentPlayer={currentPlayer}
                 swapPlayer={swapPlayer}
+                history={history}
+                setHistory={setHistory}
             />
             <div>
                 <LostFigures title="Black figures" figures={board.lostBlackFigures}/>

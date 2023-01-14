@@ -5,6 +5,7 @@ import {Cell} from "../models/Cell";
 import {Player} from "../models/Player";
 import {FigureNames} from "../models/figures/Figure";
 import {Modal, Button} from "react-bootstrap";
+import PreviousStep from "./PreviousStep";
 
 interface BoardProps {
     board: Board;
@@ -12,9 +13,11 @@ interface BoardProps {
     currentPlayer: Player | null;
     swapPlayer: () => void;
     restart: () => void;
+    history: Cell[];
+    setHistory: React.ComponentState;
 }
 
-const BoardComponent: FC<BoardProps> = ({board, setBoard, currentPlayer, swapPlayer, restart}) => {
+const BoardComponent: FC<BoardProps> = ({board, setBoard, currentPlayer, swapPlayer, restart, history, setHistory}) => {
     const [selectedCell, setSelectedCell] = useState<Cell | null>(null);
 
     const [show, setShow] = useState(true);
@@ -27,6 +30,7 @@ const BoardComponent: FC<BoardProps> = ({board, setBoard, currentPlayer, swapPla
             swapPlayer();
             board.isCheckmate(currentPlayer?.color);
             setSelectedCell(null);
+            setHistory([...history, cell])
         } else {
             if (cell.figure?.color === currentPlayer?.color) {
                 setSelectedCell(cell);
@@ -73,28 +77,28 @@ const BoardComponent: FC<BoardProps> = ({board, setBoard, currentPlayer, swapPla
             {/* Checkmate or Stalemate on the board */}
             {board.checkmate || board.stalemate
                 ? (
-                <Modal
-                    show={show}
-                    onHide={handleClose}
-                    backdrop="static"
-                    keyboard={false}>
-                    <Modal.Header>
-                        <Modal.Title>
-                            {board.checkmate ? "Mate!" : "Stalemate!"}
-                        </Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        {board.checkmate
-                            ? ` ${board.blackCheck ? "White" : "Black"} won. Maybe again?`
-                            : "It`s a draw! Maybe again?"}
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="primary" onClick={handleRestartMate}>
-                            New game
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-            ) : (<></>)}
+                    <Modal
+                        show={show}
+                        onHide={handleClose}
+                        backdrop="static"
+                        keyboard={false}>
+                        <Modal.Header>
+                            <Modal.Title>
+                                {board.checkmate ? "Mate!" : "Stalemate!"}
+                            </Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            {board.checkmate
+                                ? ` ${board.blackCheck ? "White" : "Black"} won. Maybe again?`
+                                : "It`s a draw! Maybe again?"}
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="primary" onClick={handleRestartMate}>
+                                New game
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
+                ) : (<></>)}
 
             {/* For make a figure from pawn */}
             {board.promotePawnCell ? (
@@ -150,6 +154,11 @@ const BoardComponent: FC<BoardProps> = ({board, setBoard, currentPlayer, swapPla
                                 selected={cell.x === selectedCell?.x && cell.y === selectedCell?.y}
                             />
                         )}
+                    </React.Fragment>
+                )}
+                {history.map((cell, index) =>
+                    <React.Fragment key={index}>
+                        <PreviousStep cell={cell}/>
                     </React.Fragment>
                 )}
             </div>
