@@ -7,13 +7,22 @@ import Modal from "react-bootstrap/Modal";
 
 interface TimeProps {
     currentPlayer: Player | null;
-    restart: () => void;
+    blackTime: number;
+    whiteTime: number;
+    decrementBlackTimer: () => void;
+    decrementWhiteTimer: () => void;
+    handleRestart: () => void;
 }
 
 
-const Timer: FC<TimeProps> = ({currentPlayer, restart}) => {
-    const [blackTime, setBlackTime] = useState(300);
-    const [whiteTime, setWhiteTime] = useState(300);
+const Timer: FC<TimeProps> = ({
+                                  currentPlayer,
+                                  whiteTime,
+                                  blackTime,
+                                  handleRestart,
+                                  decrementBlackTimer,
+                                  decrementWhiteTimer
+                              }) => {
     const timer = useRef<null | ReturnType<typeof setInterval>>(null);
     const [show, setShow] = useState(true);
     const handleClose = () => setShow(false);
@@ -28,20 +37,6 @@ const Timer: FC<TimeProps> = ({currentPlayer, restart}) => {
         }
         const callback = currentPlayer?.color === Colors.WHITE ? decrementWhiteTimer : decrementBlackTimer
         timer.current = setInterval(callback, 1000);
-    }
-
-    function decrementBlackTimer() {
-        setBlackTime((prev) => (prev > 0 ? prev - 1 : prev));
-    }
-
-    function decrementWhiteTimer() {
-        setWhiteTime((prev) => (prev > 0 ? prev - 1 : prev));
-    }
-
-    const handleRestart = () => {
-        setWhiteTime(300);
-        setBlackTime(300);
-        restart();
     }
 
     return (
@@ -80,4 +75,3 @@ const Timer: FC<TimeProps> = ({currentPlayer, restart}) => {
 };
 
 export default Timer;
-

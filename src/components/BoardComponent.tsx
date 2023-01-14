@@ -12,12 +12,12 @@ interface BoardProps {
     setBoard: (board: Board) => void;
     currentPlayer: Player | null;
     swapPlayer: () => void;
-    restart: () => void;
+    handleRestart: () => void;
     history: Cell[];
     setHistory: React.ComponentState;
 }
 
-const BoardComponent: FC<BoardProps> = ({board, setBoard, currentPlayer, swapPlayer, restart, history, setHistory}) => {
+const BoardComponent: FC<BoardProps> = ({board, setBoard, currentPlayer, swapPlayer, handleRestart, history, setHistory}) => {
     const [selectedCell, setSelectedCell] = useState<Cell | null>(null);
 
     const [show, setShow] = useState(true);
@@ -57,7 +57,7 @@ const BoardComponent: FC<BoardProps> = ({board, setBoard, currentPlayer, swapPla
 
     const handleRestartMate = () => {
         board.checkmate = false;
-        restart();
+        handleRestart();
     };
     const handleRestartPromote = (type: FigureNames) => {
         if (board.promotePawnCell) {

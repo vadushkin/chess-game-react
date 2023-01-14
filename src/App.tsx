@@ -14,6 +14,8 @@ const App = () => {
     const [blackPlayer, setBlackPlayer] = useState(new Player(Colors.BLACK));
     const [currentPlayer, setCurrentPlayer] = useState<Player | null>(null);
     const [history, setHistory] = useState<Cell[] | []>([]);
+    const [blackTime, setBlackTime] = useState(300);
+    const [whiteTime, setWhiteTime] = useState(300);
 
     useEffect(() => {
         restart();
@@ -22,6 +24,20 @@ const App = () => {
 
     function swapPlayer() {
         setCurrentPlayer(currentPlayer?.color === Colors.BLACK ? whitePlayer : blackPlayer)
+    }
+
+    function decrementBlackTimer() {
+        setBlackTime((prev) => (prev > 0 ? prev - 1 : prev));
+    }
+
+    function decrementWhiteTimer() {
+        setWhiteTime((prev) => (prev > 0 ? prev - 1 : prev));
+    }
+
+    const handleRestart = () => {
+        setWhiteTime(300);
+        setBlackTime(300);
+        restart();
     }
 
     function restart() {
@@ -36,11 +52,15 @@ const App = () => {
     return (
         <div className="app">
             <Timer
-                restart={restart}
                 currentPlayer={currentPlayer}
+                whiteTime={whiteTime}
+                blackTime={blackTime}
+                decrementWhiteTimer={decrementWhiteTimer}
+                decrementBlackTimer={decrementBlackTimer}
+                handleRestart={handleRestart}
             />
             <BoardComponent
-                restart={restart}
+                handleRestart={handleRestart}
                 board={board}
                 setBoard={setBoard}
                 currentPlayer={currentPlayer}
