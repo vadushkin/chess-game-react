@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import "./App.css"
+import "./App.sass"
 import BoardComponent from "./components/BoardComponent";
 import {Board} from "./models/Board";
 import {Player} from "./models/Player";
@@ -50,7 +50,7 @@ const App = () => {
     }
 
     return (
-        <div className="app">
+        <div className="screen">
             <Timer
                 currentPlayer={currentPlayer}
                 whiteTime={whiteTime}
